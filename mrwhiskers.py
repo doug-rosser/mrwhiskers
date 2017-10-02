@@ -20,7 +20,7 @@ while True:
   for x in fib:
     # First get a connection to the JSON endpoint, keep trying in case of errors
     connected = False
-    while (!connected):
+    while (not connected):
       try:
         response = urllib2.urlopen(puppet_url)
       except URLError as e:
