@@ -8,6 +8,7 @@ import sys
 import time
 import random
 
+#TODO make the hostname an argument
 puppet_url = 'https://glsn1-mom:8140/status/v1/services/pe-jruby-metrics?level=debug'
 fib = [1,2,3,5,8,13,21,34,55,89,144,233,377,610,987]
 threshold = 80
@@ -17,7 +18,17 @@ time.sleep(random.randint(0,30))
 
 while True:
   for x in fib:
-    response = urllib2.urlopen(puppet_url)
+    # First get a connection to the JSON endpoint, keep trying in case of errors
+    connected = False
+    while (!connected):
+      try:
+        response = urllib2.urlopen(puppet_url)
+      except URLError as e:
+        print e
+        time.sleep(10)
+        continue
+      connnected = True
+
     data     = response.read()
     rdata    = json.loads(data)
     reqs     = len(rdata['status']['experimental']['metrics']['requested-instances'])
